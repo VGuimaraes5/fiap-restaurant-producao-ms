@@ -7,10 +7,10 @@ namespace Application.Models.PedidoModel
     {
         public PedidoDeleteRequest()
         {
-            Id = Guid.Empty;
+            Id = "";
         }
 
         [FromRoute]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
     }
 }

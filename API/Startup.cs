@@ -1,10 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Infrastructure.Configurations;
 using Infrastructure.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -21,18 +15,14 @@ namespace API
         }
 
         public IConfiguration Configuration { get; }
-        public AppConfigurations AppConfigurations { get; set; }
 
         private readonly IWebHostEnvironment Environment;
 
         public void ConfigureServices(IServiceCollection services)
         {
-            this.AppConfigurations = services.RegisterConfigurations(Configuration);
-
             RegisterServiceExtensions.RegisterService(services);
 
             services.RegisterAutoMapper();
-
             services.AddRazorPages();
             services.AddSwaggerGen();
             services.AddCognitoIdentity();
@@ -43,8 +33,6 @@ namespace API
             {
                 options.Filters.Add(new AllowAnonymousFilter());
             }).AddNewtonsoftJson(options => ConfigureJsonOptionsSerializer(options.SerializerSettings));
-
-            services.RegisterDatabases(Configuration, Environment);
 
             services.AddMemoryCache();
             services.AddControllers();
@@ -79,8 +67,6 @@ namespace API
                 c.SpecUrl = "/swagger/v1/swagger.json";
                 c.RoutePrefix = "";
             });
-
-            app.ExecuteMigration();
 
             app.UseHttpsRedirection();
 

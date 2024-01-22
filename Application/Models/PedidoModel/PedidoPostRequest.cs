@@ -8,7 +8,7 @@ namespace Application.Models.PedidoModel
 {
     public class PedidoPostRequest
     {
-        [JsonProperty("produto")]
+        [JsonProperty("produtos")]
         public List<ProdutoDto> Produtos { get; set; }
 
         [JsonProperty("Pagamento")]
