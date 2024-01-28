@@ -2,9 +2,7 @@ using Application.Models.PedidoModel;
 using Application.UseCases.PedidoUseCase;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using Domain.Gateways;
-using Domain.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 
@@ -63,7 +61,5 @@ namespace Test.Application.UseCases.PedidoUseCase
             Assert.Equal(mappedResult, result);
             _gateway.Verify(x => x.GetPedidoBySenhaUseCaseAsync(request.Senha), Times.Once);
         }
-
     }
-
 }

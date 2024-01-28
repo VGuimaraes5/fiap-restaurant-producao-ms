@@ -67,5 +67,4 @@ namespace Test.Application.UseCases.PedidoUseCase
             await Assert.ThrowsAsync<ArgumentException>(() => useCase.ExecuteAsync(request));
         }
     }
-
 }

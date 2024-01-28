@@ -1,11 +1,9 @@
 using Application.Models.PedidoModel;
 using Application.UseCases.PedidoUseCase;
-using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Gateways;
 using Moq;
-
 
 namespace Test.Application.UseCases.PedidoUseCase
 {
@@ -53,14 +51,14 @@ namespace Test.Application.UseCases.PedidoUseCase
             var mockPagamentoGateway = new Mock<IPagamentoGateway>();
             var useCase = new PutPedidoUseCaseAsync(mockPedidoGateway.Object, mockPagamentoGateway.Object);
             var request = new PedidoPutRequest { Id = "pedido01", Status = (short)Status.Pendente };
-        
+
             mockPedidoGateway.Setup(m => m.GetAsync(It.IsAny<string>())).ReturnsAsync(new Pedido());
             mockPagamentoGateway.Setup(m => m.GetStatusAsync(It.IsAny<string>())).ReturnsAsync(useCase.GetDescriptionFromEnumValue(StatusPagamento.Pendente));
-        
+
             // Act & Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() => useCase.ExecuteAsync(request));
         }
-        
+
         [Fact]
         public async Task ExecuteAsync_ThrowsException_WhenStatusIsRejected()
         {
@@ -69,13 +67,12 @@ namespace Test.Application.UseCases.PedidoUseCase
             var mockPagamentoGateway = new Mock<IPagamentoGateway>();
             var useCase = new PutPedidoUseCaseAsync(mockPedidoGateway.Object, mockPagamentoGateway.Object);
             var request = new PedidoPutRequest { Id = "pedido01", Status = (short)Status.Pendente };
-        
+
             mockPedidoGateway.Setup(m => m.GetAsync(It.IsAny<string>())).ReturnsAsync(new Pedido());
             mockPagamentoGateway.Setup(m => m.GetStatusAsync(It.IsAny<string>())).ReturnsAsync(useCase.GetDescriptionFromEnumValue(StatusPagamento.Reprovado));
-        
+
             // Act & Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() => useCase.ExecuteAsync(request));
         }
     }
-
 }

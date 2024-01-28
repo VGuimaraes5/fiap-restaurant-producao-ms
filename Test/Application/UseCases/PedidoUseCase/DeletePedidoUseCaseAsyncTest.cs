@@ -1,10 +1,8 @@
 ﻿using Application.Models.PedidoModel;
 using Application.UseCases.PedidoUseCase;
-using AutoMapper;
 using Domain.Entities;
 using Domain.Gateways;
 using Moq;
-
 
 namespace Test.Application.UseCases.PedidoUseCase
 {
@@ -22,7 +20,7 @@ namespace Test.Application.UseCases.PedidoUseCase
         {
             // Arrange
             var request = new PedidoDeleteRequest { Id = "pedido01" };
-            var pedido = new Pedido { Id = request.Id};
+            var pedido = new Pedido { Id = request.Id };
             _gateway.Setup(x => x.GetAsync(request.Id)).ReturnsAsync(pedido);
             var useCase = new DeletePedidoUseCaseAsync(_gateway.Object);
 

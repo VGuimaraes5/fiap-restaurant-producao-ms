@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Models.PedidoModel;
 using Application.UseCases;
@@ -150,11 +149,5 @@ namespace Test.API.Controllers
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
         }
-
-
-
-
-
     }
-
 }

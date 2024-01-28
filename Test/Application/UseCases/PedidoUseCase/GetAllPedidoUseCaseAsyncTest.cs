@@ -1,5 +1,4 @@
-﻿using Application.Enums;
-using Application.Models.PedidoModel;
+﻿using Application.Models.PedidoModel;
 using Application.UseCases.PedidoUseCase;
 using AutoMapper;
 using Domain.Entities;
@@ -41,6 +40,4 @@ namespace Test.Application.UseCases.PedidoUseCase
             Assert.NotNull(result);
         }
     }
-
-
 }

@@ -2,7 +2,6 @@ using Application.Models.PedidoModel;
 using Application.UseCases.PedidoUseCase;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using Domain.Gateways;
 using Domain.Services;
 using Moq;
@@ -100,7 +99,5 @@ namespace Test.Application.UseCases.PedidoUseCase
             // Assert
             _mapper.Verify(m => m.Map<IEnumerable<HistoricoClienteResponse>>(historico), Times.Once);
         }
-
     }
-
 }
