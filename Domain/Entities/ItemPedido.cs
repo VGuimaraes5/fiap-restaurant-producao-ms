@@ -3,32 +3,30 @@ using Domain.Entities.Base;
 
 namespace Domain.Entities
 {
-    public class ItemPedido : Entity<Guid>
+    public class ItemPedido
     {
         private ItemPedido() { }
 
-        public ItemPedido(Guid pedidoId, Guid produtoId, string observacao, Guid? id = null)
+        public ItemPedido(string nomeProduto, decimal valorProduto, string observacao)
         {
-            Id = id == null ? Guid.NewGuid() : (Guid)id;
-            PedidoId = pedidoId;
-            ProdutoId = produtoId;
-            Observacao = observacao;
+            this.NomeProduto = nomeProduto;
+            this.ValorProduto = valorProduto;
+            this.Observacao = observacao;
 
             ValidateEntity();
         }
 
-        public Guid PedidoId { get; set; }
-        public Guid ProdutoId { get; set; }
+        public string NomeProduto { get; set; }
+        public decimal ValorProduto { get; set; }
         public string Observacao { get; set; }
 
         public virtual Pedido Pedido { get; set; }
-        public virtual Produto Produto { get; set; }
 
         private void ValidateEntity()
         {
-            AssertionConcern.AssertArgumentNotNull(Id, "O Id não pode estar vazio!");
-            AssertionConcern.AssertArgumentNotNull(PedidoId, "O Id do pedido não pode estar vazio!");
-            AssertionConcern.AssertArgumentNotNull(ProdutoId, "O Id do produto não pode estar vazio!");
+            AssertionConcern.AssertArgumentNotNull(NomeProduto, "O nome do produto não pode estar vazio!");
+            AssertionConcern.AssertArgumentLength(NomeProduto, 200, "A nome do produto deve conter no máximo 500 caracteres");
+            AssertionConcern.AssertArgumentNotNull(ValorProduto, "O valor do produto não pode estar vazio!");
             if (!string.IsNullOrEmpty(Observacao))
                 AssertionConcern.AssertArgumentLength(Observacao, 500, "A observação deve conter no máximo 500 caracteres");
         }

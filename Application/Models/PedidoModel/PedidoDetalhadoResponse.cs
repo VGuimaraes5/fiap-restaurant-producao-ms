@@ -8,7 +8,7 @@ namespace Application.Models.PedidoModel
     public class PedidoDetalhadoResponse
     {
         [JsonProperty("Id")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("Senha")]
         public int Senha { get; set; }
@@ -30,9 +30,6 @@ namespace Application.Models.PedidoModel
     {
         [JsonProperty("NomeProduto")]
         public string NomeProduto { get; set; }
-
-        [JsonProperty("NomeCategoria")]
-        public string NomeCategoria { get; set; }
 
         [JsonProperty("Valor")]
         public decimal Valor { get; set; }

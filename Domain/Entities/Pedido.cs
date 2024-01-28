@@ -5,24 +5,21 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class Pedido : Entity<Guid>
+    public class Pedido : Entity
     {
         private Pedido() { }
 
-        public Pedido(Guid? id = null, Status? status = null, Pagamento pagamento = null, Cliente cliente = null)
+        public Pedido(Guid? id = null, Status? status = null, Guid? idCliente = null)
         {
-            Id = id == null ? Guid.NewGuid() : (Guid)id;
             this.Status = status == null ? Status.Pendente : (Status)status;
-            Pagamento = pagamento;
-            Cliente = cliente;
+            this.IdCliente = idCliente;
             ValidateEntity();
         }
 
         public int Senha { get; private set; }
         public Status Status { get; private set; }
-        public virtual ICollection<ItemPedido> ItensPedido { get; set; }
-        public virtual Pagamento Pagamento { get; set; }
-        public virtual Cliente Cliente { get; set; }
+        public Guid? IdCliente { get; set; }
+        public List<ItemPedido> ItensPedido { get; set; }
 
         public void AddItemPedido(ItemPedido itemPedido)
         {
@@ -36,14 +33,13 @@ namespace Domain.Entities
             ValidateEntity();
         }
 
-        public void AddPagamento(TipoPagamento tipo)
+        public void SetSenha(int senha)
         {
-            Pagamento = new Pagamento(tipo, this.Id);
+            this.Senha = senha;
         }
 
         private void ValidateEntity()
         {
-            AssertionConcern.AssertArgumentNotNull(Id, "O Id não pode estar vazio!");
             AssertionConcern.AssertArgumentNotNull(this.Status, "O Status não pode estar vazio!");
             AssertionConcern.AssertArgumentRange((short)this.Status, 0, 3, "O Status informado não existe");
         }

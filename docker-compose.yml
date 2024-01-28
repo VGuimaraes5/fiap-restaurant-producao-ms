@@ -1,0 +1,40 @@
+version: "3.4"
+
+services:
+  ms-producao:
+    image: ${DOCKER_REGISTRY-}restaurant-producao-ms
+    container_name: restaurant-producao-ms
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      ASPNETCORE_URLS: http://*:5001
+      Mongo__ConnectionString: mongodb://rootuser:passw0rd7es7e@mongodb:27017
+      Mongo__Database: ProducaoDB
+      URL__Pagamento: http://localhost:5003/
+    depends_on:
+      mysqldatabase:
+        condition: service_healthy
+    networks:
+      - db_network_restaurant_producao
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: passw0rd7es7e
+    networks:
+      - db_network_restaurant_producao
+
+volumes:
+  mongodb_data:
+
+networks:
+  db_network_restaurant_producao:

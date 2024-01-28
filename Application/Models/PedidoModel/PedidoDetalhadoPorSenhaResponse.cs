@@ -8,7 +8,7 @@ namespace Application.Models.PedidoModel
     {
 
         [JsonProperty("Id")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("Senha")]
         public int Senha { get; set; }

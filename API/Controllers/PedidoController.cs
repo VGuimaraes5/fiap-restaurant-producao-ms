@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Application.Models.PedidoModel;
 using Application.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -17,7 +12,7 @@ namespace API.Controllers
         private readonly IUseCaseIEnumerableAsync<PedidoRequest, PedidoDetalhadoPorSenhaResponse> _getBySenhaCase;
         private readonly IUseCaseIEnumerableAsync<IEnumerable<PedidoDetalhadoResponse>> _getAlluseCase;
         private readonly IUseCaseIEnumerableAsync<IEnumerable<HistoricoClienteResponse>> _getHistoricoClienteUseCase;
-        private readonly IUseCaseAsync<PedidoPostRequest, Tuple<int, Guid>> _postUseCase;
+        private readonly IUseCaseAsync<PedidoPostRequest, Tuple<int, string>> _postUseCase;
         private readonly IUseCaseAsync<PedidoPutRequest> _putUseCase;
         private readonly IUseCaseAsync<PedidoDeleteRequest> _deleteUseCase;
         private readonly ILogger<PedidoController> _logger;
@@ -25,7 +20,7 @@ namespace API.Controllers
         public PedidoController(ILogger<PedidoController> logger,
             IUseCaseIEnumerableAsync<PedidoRequest, PedidoDetalhadoPorSenhaResponse> getBySenhauseCase,
             IUseCaseIEnumerableAsync<IEnumerable<PedidoDetalhadoResponse>> getAlluseCase,
-            IUseCaseAsync<PedidoPostRequest, Tuple<int, Guid>> postUseCase,
+            IUseCaseAsync<PedidoPostRequest, Tuple<int, string>> postUseCase,
             IUseCaseAsync<PedidoPutRequest> putUseCase,
             IUseCaseAsync<PedidoDeleteRequest> deleteUseCase,
             IUseCaseIEnumerableAsync<IEnumerable<HistoricoClienteResponse>> getHistoricoClienteUseCase)
@@ -98,7 +93,7 @@ namespace API.Controllers
             try
             {
                 var senhaPedido = await _postUseCase.ExecuteAsync(request);
-                
+
                 return Ok(new
                 {
                     Senha = senhaPedido.Item1,
@@ -112,7 +107,7 @@ namespace API.Controllers
         }
 
         [HttpPut("AtualizarStatus/{Id}")]
-        public async Task<IActionResult> Put([FromRoute] Guid Id, [FromBodyAttribute] PedidoPutRequest request)
+        public async Task<IActionResult> Put([FromRoute] string Id, [FromBodyAttribute] PedidoPutRequest request)
         {
             try
             {

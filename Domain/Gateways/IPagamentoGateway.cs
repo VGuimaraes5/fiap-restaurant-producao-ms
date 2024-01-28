@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Domain.Entities;
+using Domain.Enums;
 
-namespace Domain.Gateways.External
+namespace Domain.Gateways
 {
-    public interface IPagamentoGateway : IRepositoryGateway<Pagamento, Guid>
+    public interface IPagamentoGateway
     {
-        Task<Pagamento> GetByPedidoAsync(Guid pedidoId);
+        Task CreateAsync(TipoPagamento Tipo, string pedidoId);
+        Task<string> GetStatusAsync(string pedidoId);
     }
 }
