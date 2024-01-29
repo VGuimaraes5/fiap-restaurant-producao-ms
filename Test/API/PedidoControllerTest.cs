@@ -47,6 +47,20 @@ namespace Test.API.Controllers
         }
 
         [Fact]
+        public async Task GetAllAsync_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            _getAlluseCase.Setup(x => x.ExecuteAsync()).Throws(new Exception("Test exception"));
+
+            // Act
+            var result = await _controller.GetAllAsync();
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Test exception", badRequestResult.Value);
+        }
+
+        [Fact]
         public async Task GetPedidoBySenha_ShouldReturnOk_WhenPedidoExists()
         {
             // Arrange
@@ -61,6 +75,21 @@ namespace Test.API.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<PedidoDetalhadoPorSenhaResponse>(okResult.Value);
             Assert.Equal(pedido, returnValue);
+        }
+
+        [Fact]
+        public async Task GetPedidoBySenha_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var request = new PedidoRequest { Senha = 1234 };
+            _getBySenhaCase.Setup(x => x.ExecuteAsync(request)).Throws(new Exception("Test exception"));
+
+            // Act
+            var result = await _controller.GetPedidoBySenha(request);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Test exception", badRequestResult.Value);
         }
 
         [Fact]
@@ -92,6 +121,21 @@ namespace Test.API.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<List<HistoricoClienteResponse>>(okResult.Value);
             Assert.Empty(returnValue);
+        }
+
+        [Fact]
+        public async Task GetHistoricoCliente_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var request = new PedidoRequest { Senha = 1234 };
+            _getHistoricoClienteUseCase.Setup(x => x.ExecuteAsync()).Throws(new Exception("Test exception"));
+
+            // Act
+            var result = await _controller.GetHistoricoCliente();
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Test exception", badRequestResult.Value);
         }
 
         [Fact]
@@ -148,6 +192,35 @@ namespace Test.API.Controllers
 
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task Post_ShouldReturnOkResult_WhenRequestIsValid()
+        {
+            // Arrange
+            var request = new PedidoPostRequest();
+            _postUseCase.Setup(x => x.ExecuteAsync(request)).ReturnsAsync(new Tuple<int, string>(1234, "Test"));
+
+            // Act
+            var result = await _controller.Post(request);
+
+            // Assert
+            Assert.IsType<OkObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task Post_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var request = new PedidoPostRequest();
+            _postUseCase.Setup(x => x.ExecuteAsync(request)).Throws(new Exception("Test exception"));
+
+            // Act
+            var result = await _controller.Post(request);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Test exception", badRequestResult.Value);
         }
     }
 }
