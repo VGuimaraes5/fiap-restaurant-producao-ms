@@ -8,12 +8,12 @@ namespace Domain.Gateways
     public interface IPedidoGateway
     {
         Task<Pedido> GetAsync(string id);
+        Task<Pedido> GetByPedidoIdAsync(string id);
         Task DeleteAsync(string id);
-        Task<Pedido> GetPedidoBySenhaUseCaseAsync(int senha);
+        Task<Pedido> GetPedidoBySenhaUseCaseAsync(string senha);
         Task<IEnumerable<Pedido>> GetPedidosDetalhadosAsync();
-        Task<IEnumerable<Pedido>> GetHistoricoAsync(string userId);
         Task<Pedido> AddAsync(Pedido pedido);
-        Task UpdateAsync(Pedido pedido);
-        int GetSequence();
+        Task UpdateStatusAsync(Pedido pedido);
+        Task UpdateStatusPagamentoAsync(Pedido pedido);
     }
 }

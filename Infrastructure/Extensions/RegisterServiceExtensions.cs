@@ -22,20 +22,16 @@ namespace Infrastructure.Extensions
         {
             services.AddTransient<IUseCaseIEnumerableAsync<IEnumerable<PedidoDetalhadoResponse>>, GetAllPedidoUseCaseAsync>();
             services.AddTransient<IUseCaseIEnumerableAsync<PedidoRequest, PedidoDetalhadoPorSenhaResponse>, GetPedidoBySenhaUseCaseAsync>();
-            services.AddTransient<IUseCaseAsync<PedidoPostRequest, Tuple<int, string>>, PostPedidoUseCaseAsync>();
-            services.AddTransient<IUseCaseAsync<PedidoDeleteRequest>, DeletePedidoUseCaseAsync>();
-            services.AddTransient<IUseCaseAsync<PedidoPutRequest>, PutPedidoUseCaseAsync>();
+            services.AddTransient<IUseCaseAsync<PedidoPostRequest>, PostPedidoUseCaseAsync>();
+            services.AddTransient<IUseCaseAsync<PedidoAlteraStatusRequest>, AlteraStatusPedidoUseCaseAsync>();
+            services.AddTransient<IUseCaseAsync<PedidoAlteraStatusPagamentoRequest>, AlteraStatusPagamentoUseCaseAsync>();
 
-            services.AddTransient<IUseCaseIEnumerableAsync<IEnumerable<HistoricoClienteResponse>>, GetHistoricoClienteUseCaseAsync>();
-
-            //services.AddTransient<ICognitoGateway, CognitoService>();
             services.AddTransient<IIdentityService, IdentityService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddTransient<IPedidoGateway, PedidoRepository>();
-            services.AddTransient<IPagamentoGateway, PagamentoRepository>();
         }
 
         private static void AddOthers(IServiceCollection services)

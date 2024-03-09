@@ -6,12 +6,8 @@ namespace Application.Models.PedidoModel
 {
     public class PedidoDetalhadoPorSenhaResponse
     {
-
-        [JsonProperty("Id")]
-        public string Id { get; set; }
-
         [JsonProperty("Senha")]
-        public int Senha { get; set; }
+        public string Senha { get; set; }
 
         [JsonProperty("Status")]
         public string Status { get; set; }
@@ -21,6 +17,9 @@ namespace Application.Models.PedidoModel
 
         [JsonProperty("Total")]
         public decimal Total { get; set; }
+
+        [JsonProperty("PedidoId")]
+        public string PedidoId { get; set; }
 
         [JsonProperty("ItensPedido")]
         public List<PedidoProdutoDetalhadoPorSenhaResponse> ItensPedido { get; set; }
