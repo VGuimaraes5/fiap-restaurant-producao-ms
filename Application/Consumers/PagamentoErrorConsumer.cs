@@ -52,7 +52,7 @@ namespace Application.Consumers
             }
         }
 
-        private async void Consume(object sender, BasicDeliverEventArgs e)
+        public async void Consume(object sender, BasicDeliverEventArgs e)
         {
             try
             {
