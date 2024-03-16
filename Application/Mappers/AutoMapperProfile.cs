@@ -3,9 +3,11 @@ using AutoMapper;
 using Application.Models.PedidoModel;
 using Application.Utils;
 using Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Application.Mappers
 {
+    [ExcludeFromCodeCoverage]
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
