@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Domain.Entities.Base
 {
+    [ExcludeFromCodeCoverage]
     public static class CpfValidation
     {
         public static string ClearCpf(string cpf)

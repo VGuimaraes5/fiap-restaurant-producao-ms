@@ -41,6 +41,20 @@ namespace Test.API.Controllers
         }
 
         [Fact]
+        public async Task GetAllAsync_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            _getAlluseCase.Setup(x => x.ExecuteAsync()).Throws(new Exception("Test exception"));
+
+            // Act
+            var result = await _controller.GetAllAsync();
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Test exception", badRequestResult.Value);
+        }
+
+        [Fact]
         public async Task GetPedidoBySenha_ShouldReturnOk_WhenPedidoExists()
         {
             // Arrange
