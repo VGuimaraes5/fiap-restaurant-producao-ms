@@ -12,18 +12,14 @@ namespace Test.Application.Models.PedidoModel
         {
             var model = new PedidoDetalhadoResponse
             {
-                Id = "123",
-                Senha = 1234,
+                Senha = "1234",
                 Status = "Pendente",
-                StatusPagamento = "Pendente",
                 Total = 100.50m,
                 ItensPedido = new List<PedidoProdutoDetalhadoResponse>()
             };
 
-            Assert.Equal("123", model.Id);
-            Assert.Equal(1234, model.Senha);
+            Assert.Equal("1234", model.Senha);
             Assert.Equal("Pendente", model.Status);
-            Assert.Equal("Pendente", model.StatusPagamento);
             Assert.Equal(100.50m, model.Total);
             Assert.NotNull(model.ItensPedido);
         }
