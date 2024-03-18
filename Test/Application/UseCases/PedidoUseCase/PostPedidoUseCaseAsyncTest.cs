@@ -12,59 +12,89 @@ namespace Test.Application.UseCases.PedidoUseCase
 {
     public class PostPedidoUseCaseAsyncTests
     {
-        private readonly Mock<IPedidoGateway> _pedidoGateway;
-        private readonly Mock<IPagamentoGateway> _pagamentoGateway;
-        private readonly Mock<IIdentityService> _identityService;
-        private readonly Mock<IMapper> _mapper;
-
-        public PostPedidoUseCaseAsyncTests()
-        {
-            _pedidoGateway = new Mock<IPedidoGateway>();
-            _pagamentoGateway = new Mock<IPagamentoGateway>();
-            _identityService = new Mock<IIdentityService>();
-            _mapper = new Mock<IMapper>();
-        }
-
         [Fact]
-        public async Task ExecuteAsync_ShouldReturnPedido_WhenPedidoIsValid()
+        public async Task ExecuteAsync_ThrowsArgumentException_WhenProdutosIsNull()
         {
             // Arrange
-            var request = new PedidoPostRequest
-            {
-                Produtos = new List<ProdutoDto>
-            {
-                new ProdutoDto { NomeProduto = "Test", ValorProduto = 10, Observacao = "Test" }
-            },
-                Pagamento = new PagamentoDto { Tipo = TipoPagamento.Pix }
-            };
-
-            var pedido = new Pedido();
-            _pedidoGateway.Setup(x => x.GetSequence()).Returns(1);
-            _pedidoGateway.Setup(x => x.AddAsync(It.IsAny<Pedido>())).ReturnsAsync(pedido);
-
-            var userId = Guid.NewGuid().ToString();
-            _identityService.Setup(x => x.GetUserId()).Returns(userId);
-
-            var useCase = new PostPedidoUseCaseAsync(_pedidoGateway.Object, _pagamentoGateway.Object, _mapper.Object, _identityService.Object);
-
-            // Act
-            var result = await useCase.ExecuteAsync(request);
-
-            // Assert
-            Assert.Equal(pedido.Senha, result.Item1);
-            Assert.Equal(pedido.Id, result.Item2);
-        }
-
-        [Fact]
-        public async Task ExecuteAsync_ShouldThrowArgumentException_WhenPedidoIsInvalid()
-        {
-            // Arrange
-            var request = new PedidoPostRequest { Produtos = new List<ProdutoDto>() };
-
-            var useCase = new PostPedidoUseCaseAsync(_pedidoGateway.Object, _pagamentoGateway.Object, _mapper.Object, _identityService.Object);
+            var mockPedidoGateway = new Mock<IPedidoGateway>();
+            var mockIdentityService = new Mock<IIdentityService>();
+            var mockMapper = new Mock<IMapper>();
+            var useCase = new PostPedidoUseCaseAsync(mockPedidoGateway.Object, mockMapper.Object, mockIdentityService.Object);
+            var request = new PedidoPostRequest { Produtos = null };
 
             // Act & Assert
-            await Assert.ThrowsAsync<ArgumentException>(() => useCase.ExecuteAsync(request));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => useCase.ExecuteAsync(request));
+            Assert.Equal("Dados do pedido são inválidos", exception.Message);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_ThrowsArgumentException_WhenProdutosIsEmpty()
+        {
+            // Arrange
+            var mockPedidoGateway = new Mock<IPedidoGateway>();
+            var mockIdentityService = new Mock<IIdentityService>();
+            var mockMapper = new Mock<IMapper>();
+            var useCase = new PostPedidoUseCaseAsync(mockPedidoGateway.Object, mockMapper.Object, mockIdentityService.Object);
+            var request = new PedidoPostRequest { Produtos = new List<ProdutoVO>() };
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => useCase.ExecuteAsync(request));
+            Assert.Equal("Dados do pedido são inválidos", exception.Message);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_CreatesItemPedidoForEachProductInRequest()
+        {
+            // Arrange
+            var mockPedidoGateway = new Mock<IPedidoGateway>();
+            var mockIdentityService = new Mock<IIdentityService>();
+            var mockMapper = new Mock<IMapper>();
+            var useCase = new PostPedidoUseCaseAsync(mockPedidoGateway.Object, mockMapper.Object, mockIdentityService.Object);
+            var request = new PedidoPostRequest
+            {
+                Produtos = new List<ProdutoVO>
+            {
+                new ProdutoVO { NomeProduto = "Lanche", ValorProduto = 10.50M, Observacao = "s/ cebola" },
+                new ProdutoVO { NomeProduto = "Suco", ValorProduto = 8.70M, Observacao = "s/ açucar" }
+            }
+            };
+
+            // Act
+            await useCase.ExecuteAsync(request);
+
+            // Assert
+            mockPedidoGateway.Verify(gateway => gateway.AddAsync(It.Is<Pedido>(pedido =>
+                pedido.ItensPedido.Count == 2 &&
+                pedido.ItensPedido.Any(item => item.NomeProduto == "Lanche" && item.ValorProduto == 10.50M && item.Observacao == "s/ cebola") &&
+                pedido.ItensPedido.Any(item => item.NomeProduto == "Suco" && item.ValorProduto == 8.70M && item.Observacao == "s/ açucar")
+            )), Times.Once);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_SetsIdCliente_WhenGetUserIdReturnsNonEmptyString()
+        {
+            // Arrange
+            var mockPedidoGateway = new Mock<IPedidoGateway>();
+            var mockIdentityService = new Mock<IIdentityService>();
+            var mockMapper = new Mock<IMapper>();
+            var useCase = new PostPedidoUseCaseAsync(mockPedidoGateway.Object, mockMapper.Object, mockIdentityService.Object);
+            var request = new PedidoPostRequest
+            {
+                Produtos = new List<ProdutoVO>
+            {
+                new ProdutoVO { NomeProduto = "Lanche", ValorProduto = 10.50M, Observacao = "completo" }
+            }
+            };
+            var userId = Guid.NewGuid().ToString();
+            mockIdentityService.Setup(service => service.GetUserId()).Returns(userId);
+
+            // Act
+            await useCase.ExecuteAsync(request);
+
+            // Assert
+            mockPedidoGateway.Verify(gateway => gateway.AddAsync(It.Is<Pedido>(pedido =>
+                pedido.IdCliente == Guid.Parse(userId)
+            )), Times.Once);
         }
     }
 }

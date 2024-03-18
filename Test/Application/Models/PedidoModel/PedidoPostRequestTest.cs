@@ -14,19 +14,16 @@ namespace Test.Application.Models.PedidoModel
         {
             var model = new PedidoPostRequest
             {
-                Produtos = new List<ProdutoDto>
+                Produtos = new List<ProdutoVO>
             {
-                new ProdutoDto
+                new ProdutoVO
                 {
                     NomeProduto = "Lanche01",
                     ValorProduto = 50.25m,
                     Observacao = "n/a"
                 }
             },
-                Pagamento = new PagamentoDto
-                {
-                    Tipo = TipoPagamento.Pix,
-                }
+               
             };
 
             Assert.NotNull(model.Produtos);
@@ -34,9 +31,6 @@ namespace Test.Application.Models.PedidoModel
             Assert.Equal("Lanche01", model.Produtos[0].NomeProduto);
             Assert.Equal(50.25m, model.Produtos[0].ValorProduto);
             Assert.Equal("n/a", model.Produtos[0].Observacao);
-
-            Assert.NotNull(model.Pagamento);
-            Assert.Equal(TipoPagamento.Pix.ToString(), model.Pagamento.Tipo.ToString());
         }
     }
 }

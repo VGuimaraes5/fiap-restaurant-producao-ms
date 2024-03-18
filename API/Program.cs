@@ -9,7 +9,11 @@ namespace API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args)
+                .ConfigureWebHost(options =>
+                    options.ConfigureKestrel(kestrel => kestrel.AddServerHeader = false))
+                .Build()
+                .Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

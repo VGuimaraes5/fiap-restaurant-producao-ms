@@ -3,6 +3,7 @@ using Infrastructure.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json.Converters;
+using Application.Consumers;
 using System.Diagnostics.CodeAnalysis;
 
 namespace API
@@ -38,6 +39,12 @@ namespace API
 
             services.AddMemoryCache();
             services.AddControllers();
+
+            services.AddCors();
+
+            services.AddHostedService<PedidoCreateConsumer>();
+            services.AddHostedService<PagamentoSuccessConsumer>();
+            services.AddHostedService<PagamentoErrorConsumer>();
         }
 
         private void ConfigureJsonOptionsSerializer(JsonSerializerSettings serializerSettings)
@@ -54,10 +61,19 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("x-frame-options", "DENY");
+
+                await next();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -76,6 +92,11 @@ namespace API
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors(options => options
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
 
             app.UseEndpoints(endpoints =>
             {

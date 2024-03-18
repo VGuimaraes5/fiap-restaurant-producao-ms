@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
-using Application.Enums;
 using Application.Models.PedidoModel;
 using Domain.Entities;
 using Domain.Gateways;
@@ -25,7 +24,7 @@ namespace Application.UseCases.PedidoUseCase
 
         public async Task<PedidoDetalhadoPorSenhaResponse> ExecuteAsync(PedidoRequest request)
         {
-            var key = CacheKeys.CategoriaProduto + request.Senha;
+            var key = request.Senha;
 
             if (!_memoryCache.TryGetValue(key, out IEnumerable<Pedido> cacheValue))
             {

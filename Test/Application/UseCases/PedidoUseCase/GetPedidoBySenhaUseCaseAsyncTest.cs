@@ -25,7 +25,7 @@ namespace Test.Application.UseCases.PedidoUseCase
         public async Task ExecuteAsync_ShouldReturnMappedResult_WhenPedidoExists()
         {
             // Arrange
-            var request = new PedidoRequest { Senha = 1001 };
+            var request = new PedidoRequest { Senha = "1001" };
             var pedido = new Pedido();
             _gateway.Setup(x => x.GetPedidoBySenhaUseCaseAsync(request.Senha)).ReturnsAsync(pedido);
 
@@ -45,7 +45,7 @@ namespace Test.Application.UseCases.PedidoUseCase
         public async Task ExecuteAsync_ShouldReturnMappedResult_WhenPedidoIsNotInCache()
         {
             // Arrange
-            var request = new PedidoRequest { Senha = 1001 };
+            var request = new PedidoRequest { Senha = "1001" };
             var pedido = new Pedido();
             _gateway.Setup(x => x.GetPedidoBySenhaUseCaseAsync(request.Senha)).ReturnsAsync(pedido);
 

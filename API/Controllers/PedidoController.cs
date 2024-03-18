@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Application.Models.PedidoModel;
 using Application.UseCases;
 
@@ -11,27 +10,16 @@ namespace API.Controllers
     {
         private readonly IUseCaseIEnumerableAsync<PedidoRequest, PedidoDetalhadoPorSenhaResponse> _getBySenhaCase;
         private readonly IUseCaseIEnumerableAsync<IEnumerable<PedidoDetalhadoResponse>> _getAlluseCase;
-        private readonly IUseCaseIEnumerableAsync<IEnumerable<HistoricoClienteResponse>> _getHistoricoClienteUseCase;
-        private readonly IUseCaseAsync<PedidoPostRequest, Tuple<int, string>> _postUseCase;
-        private readonly IUseCaseAsync<PedidoPutRequest> _putUseCase;
-        private readonly IUseCaseAsync<PedidoDeleteRequest> _deleteUseCase;
-        private readonly ILogger<PedidoController> _logger;
+        private readonly IUseCaseAsync<PedidoAlteraStatusRequest> _alteraStatusUseCase;
 
-        public PedidoController(ILogger<PedidoController> logger,
+        public PedidoController(
             IUseCaseIEnumerableAsync<PedidoRequest, PedidoDetalhadoPorSenhaResponse> getBySenhauseCase,
             IUseCaseIEnumerableAsync<IEnumerable<PedidoDetalhadoResponse>> getAlluseCase,
-            IUseCaseAsync<PedidoPostRequest, Tuple<int, string>> postUseCase,
-            IUseCaseAsync<PedidoPutRequest> putUseCase,
-            IUseCaseAsync<PedidoDeleteRequest> deleteUseCase,
-            IUseCaseIEnumerableAsync<IEnumerable<HistoricoClienteResponse>> getHistoricoClienteUseCase)
+            IUseCaseAsync<PedidoAlteraStatusRequest> alteraStatusUseCase)
         {
-            _logger = logger;
             _getBySenhaCase = getBySenhauseCase;
             _getAlluseCase = getAlluseCase;
-            _postUseCase = postUseCase;
-            _putUseCase = putUseCase;
-            _deleteUseCase = deleteUseCase;
-            _getHistoricoClienteUseCase = getHistoricoClienteUseCase;
+            _alteraStatusUseCase = alteraStatusUseCase;
         }
 
         [HttpGet("Acompanhamento")]
@@ -68,65 +56,13 @@ namespace API.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("historico")]
-        public async Task<IActionResult> GetHistoricoCliente()
-        {
-            try
-            {
-                var result = await _getHistoricoClienteUseCase.ExecuteAsync();
-
-                if (result != null)
-                    return Ok(result);
-
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost("Checkout")]
-        public async Task<IActionResult> Post([FromBodyAttribute] PedidoPostRequest request)
-        {
-            try
-            {
-                var senhaPedido = await _postUseCase.ExecuteAsync(request);
-
-                return Ok(new
-                {
-                    Senha = senhaPedido.Item1,
-                    PedidoId = senhaPedido.Item2
-                });
-            }
-            catch (Exception exception)
-            {
-                return BadRequest(exception.Message);
-            }
-        }
-
         [HttpPut("AtualizarStatus/{Id}")]
-        public async Task<IActionResult> Put([FromRoute] string Id, [FromBodyAttribute] PedidoPutRequest request)
+        public async Task<IActionResult> Put([FromRoute] string Id, [FromBody] PedidoAlteraStatusRequest request)
         {
             try
             {
-                request.Id = Id;
-                await _putUseCase.ExecuteAsync(request);
-                return Ok();
-            }
-            catch (Exception exception)
-            {
-                return BadRequest(exception.Message);
-            }
-        }
-
-        [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete([FromRoute] PedidoDeleteRequest request)
-        {
-            try
-            {
-                await _deleteUseCase.ExecuteAsync(request);
+                request.PedidoId = Id;
+                await _alteraStatusUseCase.ExecuteAsync(request);
                 return Ok();
             }
             catch (Exception exception)

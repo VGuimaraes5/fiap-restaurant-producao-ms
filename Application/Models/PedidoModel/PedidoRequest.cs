@@ -6,10 +6,10 @@ namespace Application.Models.PedidoModel
     {
         public PedidoRequest()
         {
-            Senha = 0;
+            Senha = "";
         }
 
         [FromRoute]
-        public int Senha { get; set; }
+        public string Senha { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Gateways;
 using MongoDB.Driver;
 
@@ -29,32 +30,29 @@ namespace Infrastructure.DataProviders
             return await _context.Pedido.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Pedido>> GetHistoricoAsync(string userId)
+        public async Task<Pedido> GetByPedidoIdAsync(string id)
         {
-            return await _context.Pedido.Find(x => x.IdCliente == Guid.Parse(userId)).ToListAsync();
+            return await _context.Pedido.Find(x => x.PedidoId == id).FirstOrDefaultAsync();
         }
 
-        public async Task<Pedido> GetPedidoBySenhaUseCaseAsync(int senha)
+        public async Task<Pedido> GetPedidoBySenhaUseCaseAsync(string senha)
         {
             return await _context.Pedido.Find(x => x.Senha == senha).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Pedido>> GetPedidosDetalhadosAsync()
         {
-            return await _context.Pedido.Find(_ => true).ToListAsync();
+            return await _context.Pedido.Find(x => x.StatusPagamento == StatusPagamento.Aprovado && x.Status != Status.Entregue && x.Status != Status.Reprovado).ToListAsync();
         }
 
-        public async Task UpdateAsync(Pedido pedido)
+        public async Task UpdateStatusAsync(Pedido pedido)
         {
             await _context.Pedido.UpdateOneAsync(Builders<Pedido>.Filter.Where(x => x.Id == pedido.Id), Builders<Pedido>.Update.Set(p => p.Status, pedido.Status));
         }
 
-        public int GetSequence()
+        public async Task UpdateStatusPagamentoAsync(Pedido pedido)
         {
-            var pedido = _context.Pedido.AsQueryable().OrderByDescending(c => c.Senha).FirstOrDefault();
-            if (pedido != null) return pedido.Senha + 1;
-
-            return 1;
+            await _context.Pedido.UpdateOneAsync(Builders<Pedido>.Filter.Where(x => x.Id == pedido.Id), Builders<Pedido>.Update.Set(p => p.StatusPagamento, pedido.StatusPagamento));
         }
     }
 }

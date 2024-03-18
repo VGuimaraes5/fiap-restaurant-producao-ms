@@ -2,9 +2,9 @@ using System;
 
 namespace Application.Models.PedidoModel
 {
-    public class PedidoPutRequest
+    public class PedidoAlteraStatusRequest
     {
-        public string Id { get; set; }
+        public string PedidoId { get; set; }
         public short Status { get; set; }
     }
 }

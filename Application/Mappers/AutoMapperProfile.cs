@@ -25,16 +25,8 @@ namespace Application.Mappers
             CreateMap<Pedido, PedidoDetalhadoPorSenhaResponse>()
                 .ForMember(x => x.Status, m => m.MapFrom(x => EnumUtil.GetDescriptionFromEnumValue(x.Status)))
                 .ForMember(x => x.Total, m => m.MapFrom(x => x.ItensPedido.Select(x => x.ValorProduto).Sum()));
-            //.ForMember(x => x.StatusPagamento, m => m.MapFrom(x => EnumUtil.GetDescriptionFromEnumValue(x.Pagamento.Status)));
 
             CreateMap<ItemPedido, PedidoProdutoDetalhadoPorSenhaResponse>()
-                .ForMember(x => x.NomeProduto, m => m.MapFrom(x => x.NomeProduto))
-                .ForMember(x => x.Valor, m => m.MapFrom(x => x.ValorProduto));
-
-            CreateMap<Pedido, HistoricoClienteResponse>()
-                .ForMember(x => x.Total, m => m.MapFrom(x => x.ItensPedido.Select(x => x.ValorProduto).Sum()));
-
-            CreateMap<ItemPedido, HistoricoClienteProdutoUseCaseResponse>()
                 .ForMember(x => x.NomeProduto, m => m.MapFrom(x => x.NomeProduto))
                 .ForMember(x => x.Valor, m => m.MapFrom(x => x.ValorProduto));
         }
