@@ -24,7 +24,7 @@ namespace Application.UseCases.PedidoUseCase
             if (pedido == null)
                 throw new KeyNotFoundException("Pedido não encontrado");
 
-            pedido.SetStatus(request.Status);
+            pedido.SetStatusFromPayment(request.Status);
             await _pedidoGateway.UpdateStatusAsync(pedido);
         }
     }

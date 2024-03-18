@@ -39,6 +39,15 @@ namespace Domain.Entities
             ValidateEntity();
         }
 
+        public void SetStatusFromPayment(short status)
+        {
+            if (this.Status != Status.EmAnalise)
+                throw new Exception("Não é possível atualizar o status!");
+
+            this.Status = (Status)status;
+            ValidateEntity();
+        }
+
         public void SetStatusPagamento(short status)
         {
             if (this.StatusPagamento == StatusPagamento.Aprovado || this.StatusPagamento == StatusPagamento.Reprovado)
