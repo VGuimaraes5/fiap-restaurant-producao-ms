@@ -26,8 +26,10 @@ spec:
         env:
           - name: ASPNETCORE_URLS
             value: http://*:$appPort
-          - name: ConnectionStrings__ConnectionString
+          - name: Mongo__ConnectionString
             value: $connectionString
+          - name: ConnectionStrings__RabbitMQ
+            value: $connectionStringRabbit
           - name: Aws__PoolId
             value: $poolId
           - name: Aws__PoolClientId
