@@ -1,4 +1,5 @@
 using Application.Models.PedidoModel;
+using Domain.Entities.Base;
 using System.Collections.Generic;
 using Xunit;
 
@@ -15,12 +16,14 @@ namespace Test.Application.Models.PedidoModel
                 Senha = "1234",
                 Status = "Pendente",
                 Total = 100.50m,
+                PedidoId = "pedido-01",
                 ItensPedido = new List<PedidoProdutoDetalhadoResponse>()
             };
 
             Assert.Equal("1234", model.Senha);
             Assert.Equal("Pendente", model.Status);
             Assert.Equal(100.50m, model.Total);
+            Assert.Equal("pedido-01", model.PedidoId);
             Assert.NotNull(model.ItensPedido);
         }
     }
