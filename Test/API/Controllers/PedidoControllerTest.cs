@@ -41,6 +41,21 @@ namespace Test.API.Controllers
         }
 
         [Fact]
+        public async Task GetAllAsync_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var exceptionMessage = "Test exception";
+            _getAlluseCase.Setup(x => x.ExecuteAsync()).Throws(new Exception(exceptionMessage));
+
+            // Act
+            var result = await _controller.GetAllAsync();
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(exceptionMessage, badRequestResult.Value);
+        }
+
+        [Fact]
         public async Task GetPedidoBySenha_ShouldReturnOk_WhenPedidoExists()
         {
             // Arrange
@@ -55,6 +70,52 @@ namespace Test.API.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<PedidoDetalhadoPorSenhaResponse>(okResult.Value);
             Assert.Equal(pedido, returnValue);
+        }
+
+        [Fact]
+        public async Task GetPedidoBySenha_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var exceptionMessage = "Test exception";
+            var request = new PedidoRequest { Senha = "1001" };
+            _getBySenhaCase.Setup(x => x.ExecuteAsync(It.IsAny<PedidoRequest>())).Throws(new Exception(exceptionMessage));
+
+            // Act
+            var result = await _controller.GetPedidoBySenha(request);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(exceptionMessage, badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task Put_ShouldReturnOk_WhenNoExceptionIsThrown()
+        {
+            // Arrange
+            var request = new PedidoAlteraStatusRequest();
+            _alteraStatusUseCase.Setup(x => x.ExecuteAsync(It.IsAny<PedidoAlteraStatusRequest>())).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.Put("1", request);
+
+            // Assert
+            Assert.IsType<OkResult>(result);
+        }
+
+        [Fact]
+        public async Task Put_ShouldReturnBadRequest_WhenExceptionIsThrown()
+        {
+            // Arrange
+            var exceptionMessage = "Test exception";
+            var request = new PedidoAlteraStatusRequest();
+            _alteraStatusUseCase.Setup(x => x.ExecuteAsync(It.IsAny<PedidoAlteraStatusRequest>())).Throws(new Exception(exceptionMessage));
+
+            // Act
+            var result = await _controller.Put("1", request);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(exceptionMessage, badRequestResult.Value);
         }
     }
 }

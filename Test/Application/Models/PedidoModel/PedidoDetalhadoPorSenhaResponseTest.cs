@@ -1,4 +1,5 @@
 using Application.Models.PedidoModel;
+using Domain.Entities.Base;
 using System.Collections.Generic;
 using Xunit;
 
@@ -15,6 +16,7 @@ namespace Test.Application.Models.PedidoModel
                 Status = "Pendente",
                 StatusPagamento = "Pendente",
                 Total = 100.50m,
+                PedidoId = "pedido-01",
                 ItensPedido = new List<PedidoProdutoDetalhadoPorSenhaResponse>()
             };
 
@@ -22,6 +24,7 @@ namespace Test.Application.Models.PedidoModel
             Assert.Equal("Pendente", model.Status);
             Assert.Equal("Pendente", model.StatusPagamento);
             Assert.Equal(100.50m, model.Total);
+            Assert.Equal("pedido-01", model.PedidoId);
             Assert.NotNull(model.ItensPedido);
         }
     }
